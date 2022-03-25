@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="499.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cloudStorage.client.NettyClient">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="499.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cloudStorage.client.MainController">
     <ListView fx:id="clientView" layoutX="10.0" layoutY="110.0" prefHeight="296.0" prefWidth="257.0" />
     <ListView fx:id="serverView" layoutX="302.0" layoutY="110.0" prefHeight="296.0" prefWidth="257.0" />
     <TextField fx:id="clientPath" editable="false" layoutX="10.0" layoutY="84.0" prefHeight="27.0" prefWidth="257.0" />
@@ -20,7 +20,7 @@
    <Line endX="286.0" layoutX="285.0" layoutY="59.0" startX="-285.0" />
    <Label alignment="CENTER" layoutX="11.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0" text="Ваш компьютер" />
    <Label alignment="CENTER" layoutX="302.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0" text="Удаленный сервер" />
-   <RadioButton id="radioButtonDelete" layoutX="298.0" layoutY="452.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="267.0" text="перемещать с удалением" />
+   <RadioButton onAction="#radioButtonDeleteFile" layoutX="298.0" layoutY="452.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="267.0" text="перемещать с удалением" />
    <Line endX="286.0" layoutX="283.0" layoutY="446.0" startX="-285.0" />
    <Label layoutX="7.0" layoutY="452.0" prefHeight="17.0" prefWidth="59.0" text="Скорость:" />
    <ProgressBar id="progresBar" layoutX="9.0" layoutY="472.0" prefHeight="20.0" prefWidth="549.0" progress="0.0" />
