@@ -1,13 +1,11 @@
 package com.cloudStorage.server.handler;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.cloudStorage.server.model.CloudMessage;
-import com.cloudStorage.server.model.FileRequest;
-import com.cloudStorage.server.model.ListMessage;
-import com.cloudStorage.server.model.FileMessage;
+import com.cloudStorage.server.model.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -17,8 +15,9 @@ public class CloudMessageHandler extends SimpleChannelInboundHandler<CloudMessag
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        serverDir = Paths.get("server");
-        ctx.writeAndFlush(new ListMessage(serverDir));
+        serverDir = Paths.get("serverDir");
+        ctx.write(new ListMessage(serverDir));
+        ctx.writeAndFlush(new FileDir(serverDir.toFile().getPath()));
     }
 
     @Override
@@ -31,8 +30,20 @@ public class CloudMessageHandler extends SimpleChannelInboundHandler<CloudMessag
                 break;
             case FILE_REQUEST:
                 FileRequest fr = (FileRequest) cloudMessage;
-                ctx.writeAndFlush(new FileMessage(serverDir.resolve(fr.getName())));
+                ctx.write(new FileMessage(serverDir.resolve(fr.getName())));
+                if (fr.isDelete()) {
+                    deleteFile(serverDir.resolve(fr.getName()).toFile(), fr.getName(), fr.isDelete());
+                }
+                ctx.writeAndFlush(new ListMessage(serverDir));
                 break;
+        }
+    }
+
+    private void deleteFile(File file, String name, boolean delete) {
+        if (delete) {
+            if (file.delete()) {
+                System.out.println("File: " + name + " delete");
+            }
         }
     }
 }

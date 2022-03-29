@@ -9,15 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
-import com.cloudStorage.server.model.CloudMessage;
-import com.cloudStorage.server.model.FileMessage;
-import com.cloudStorage.server.model.FileRequest;
-import com.cloudStorage.server.model.ListMessage;
+import com.cloudStorage.server.model.*;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
@@ -29,6 +27,7 @@ public class MainController implements Initializable {
     public TextField serverPath;
 
     private Path clientDir;
+    File currentDirectory;
 
     private ObjectEncoderOutputStream oos;
     private ObjectDecoderInputStream ois;
@@ -36,11 +35,28 @@ public class MainController implements Initializable {
     private boolean delete = false;
 
     public void download(ActionEvent actionEvent) throws IOException {
-        oos.writeObject(new FileRequest(serverView.getSelectionModel().getSelectedItem()));
+        if (chekSelectedView(serverView)) {
+            oos.writeObject(new FileRequest(serverView.getSelectionModel().getSelectedItem(), delete));
+            updateClientView();
+            selectView(clientView, serverView.getSelectionModel().getSelectedItem());
+            System.out.println("Файл получен" + delete);
+        } else {
+            alert("Файл не выбран", "Выбери файл для загрузки!");
+        }
     }
 
     public void upload(ActionEvent actionEvent) throws IOException {
-        oos.writeObject(new FileMessage(clientDir.resolve(clientView.getSelectionModel().getSelectedItem())));
+        if (chekSelectedView(clientView)) {
+            String item = clientView.getSelectionModel().getSelectedItem();
+            File selected = clientDir.resolve(item).toFile();
+            oos.writeObject(new FileMessage(clientDir.resolve(clientView.getSelectionModel().getSelectedItem())));
+            deleteFile(selected, item);
+            updateClientView();
+            selectView(serverView, clientView.getSelectionModel().getSelectedItem());
+            System.out.println("Файл отправлен");
+        } else {
+            alert("Файл не выбран", "Выбери файл для отправки!");
+        }
     }
 
     public void radioButtonDeleteFile(ActionEvent actionEvent) throws IOException {
@@ -60,7 +76,7 @@ public class MainController implements Initializable {
     }
 
 
-    private void updateClientView() {
+    private void updateClientView() { //обновление списка клиента
         Platform.runLater(() -> {
             clientView.getItems().clear();
             clientView.getItems().add("...");
@@ -85,6 +101,10 @@ public class MainController implements Initializable {
                             serverView.getItems().add("...");
                             serverView.getItems().addAll(lm.getFiles());
                         });
+                        break;
+                    case FILE_DIR:
+                        FileDir fd = (FileDir) msg;
+                        serverPath.setText(fd.getDir());
                 }
             }
         } catch (Exception e) {
@@ -94,6 +114,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         try {
             Socket socket = new Socket("localhost", 8189);
             oos = new ObjectEncoderOutputStream(socket.getOutputStream());
@@ -103,8 +124,46 @@ public class MainController implements Initializable {
             Thread readThread = new Thread(this::read);
             readThread.setDaemon(true);
             readThread.start();
+
+
+            clientPath.setText(clientDir.toFile().getPath());
+
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+
+        /*clientView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                String item = clientView.getSelectionModel().getSelectedItem();
+                if (item.equals("...")) {
+                    currentDirectory = clientDir.toFile().getParentFile();
+                    updateClientView();
+                } else {
+                    File selected = clientDir.toFile().toPath().resolve(item).toFile();
+                    if (selected.isDirectory()) {
+                        currentDirectory = selected;
+                        updateClientView();
+                    }
+                }
+            }
+        });*/
+    }
+
+    private Boolean chekSelectedView(ListView<String> view) { // если файл не выделен возвращает false
+        return !view.getSelectionModel().isEmpty();
+    }
+
+    private void selectView(ListView<String> view, String name) {
+        Platform.runLater(() -> {
+            view.getSelectionModel().select(name);
+        });
+    }
+
+    private void alert(String title, String meseg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(meseg);
+        alert.showAndWait();
     }
 }
