@@ -16,13 +16,14 @@
     <TextField fx:id="serverPath" editable="false" layoutX="302.0" layoutY="85.0" prefHeight="26.0" prefWidth="257.0" />
     <Button layoutX="302.0" layoutY="406.0" mnemonicParsing="false" onAction="#download" prefHeight="26.0" prefWidth="257.0" text="скачать выбранный файл" />
     <Button layoutX="10.0" layoutY="406.0" mnemonicParsing="false" onAction="#upload" prefHeight="26.0" prefWidth="257.0" text="загрузить выбранный файл" />
-   <Line endX="-100.5" endY="384.5" layoutX="384.0" layoutY="61.0" startX="-100.0" startY="-2.0" />
-   <Line endX="286.0" layoutX="285.0" layoutY="59.0" startX="-285.0" />
-   <Label alignment="CENTER" layoutX="11.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0" text="Ваш компьютер" />
-   <Label alignment="CENTER" layoutX="302.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0" text="Удаленный сервер" />
-   <RadioButton onAction="#radioButtonDeleteFile" layoutX="298.0" layoutY="452.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="267.0" text="перемещать с удалением" />
-   <Line endX="286.0" layoutX="283.0" layoutY="446.0" startX="-285.0" />
-   <Label layoutX="7.0" layoutY="452.0" prefHeight="17.0" prefWidth="59.0" text="Скорость:" />
-   <ProgressBar id="progresBar" layoutX="9.0" layoutY="472.0" prefHeight="20.0" prefWidth="549.0" progress="0.0" />
-   <Label id="speed" layoutX="67.0" layoutY="452.0" prefHeight="17.0" prefWidth="67.0" />
+    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateView" prefHeight="26.0" prefWidth="150.0" text="Обновить списки" />
+    <Line endX="-100.5" endY="384.5" layoutX="384.0" layoutY="61.0" startX="-100.0" startY="-2.0" />
+    <Line endX="286.0" layoutX="285.0" layoutY="59.0" startX="-285.0" />
+    <Label alignment="CENTER" layoutX="11.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0" text="Ваш компьютер" />
+    <Label alignment="CENTER" layoutX="302.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0" text="Удаленный сервер" />
+    <RadioButton layoutX="250.0" layoutY="15.0" mnemonicParsing="false" onAction="#radioButtonDeleteFile" prefHeight="18.0" prefWidth="267.0" text="перемещать с удалением" />
+    <Line endX="286.0" layoutX="283.0" layoutY="446.0" startX="-285.0" />
+    <Label layoutX="7.0" layoutY="452.0" prefHeight="17.0" prefWidth="59.0" text="Скорость:" />
+    <ProgressBar id="progresBar" layoutX="9.0" layoutY="472.0" prefHeight="20.0" prefWidth="549.0" progress="0.0" />
+    <Label id="speed" layoutX="67.0" layoutY="452.0" prefHeight="17.0" prefWidth="67.0" />
 </AnchorPane>

@@ -1,5 +1,6 @@
 package com.cloudStorage.client;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -27,7 +28,6 @@ public class MainController implements Initializable {
     public TextField serverPath;
 
     private Path clientDir;
-    File currentDirectory;
 
     private ObjectEncoderOutputStream oos;
     private ObjectDecoderInputStream ois;
@@ -39,7 +39,6 @@ public class MainController implements Initializable {
             oos.writeObject(new FileRequest(serverView.getSelectionModel().getSelectedItem(), delete));
             updateClientView();
             selectView(clientView, serverView.getSelectionModel().getSelectedItem());
-            System.out.println("Файл получен" + delete);
         } else {
             alert("Файл не выбран", "Выбери файл для загрузки!");
         }
@@ -53,7 +52,6 @@ public class MainController implements Initializable {
             deleteFile(selected, item);
             updateClientView();
             selectView(serverView, clientView.getSelectionModel().getSelectedItem());
-            System.out.println("Файл отправлен");
         } else {
             alert("Файл не выбран", "Выбери файл для отправки!");
         }
@@ -159,11 +157,30 @@ public class MainController implements Initializable {
         });
     }
 
-    private void alert(String title, String meseg) {
+    private void alert(String title, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(meseg);
+        alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    public void updateView(ActionEvent actionEvent) {
+        updateClientView();
+        try {
+            oos.writeObject(new ListMessage(clientDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        viewColor(clientView);
+        viewColor(serverView);
+    }
+
+
+    public void viewColor (ListView<String> view){
+        Platform.runLater(()->{
+            view.styleProperty().set("-fx-background-color: red;");
+        });
+
     }
 }
