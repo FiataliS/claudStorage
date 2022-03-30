@@ -1,4 +1,4 @@
-package com.cloudStorage.server.model;
+package com.cloudStorage.module.model;
 
 public enum MessageType {
     FILE,

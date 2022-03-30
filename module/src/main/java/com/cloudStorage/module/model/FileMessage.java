@@ -1,4 +1,4 @@
-package com.cloudStorage.server.model;
+package com.cloudStorage.module.model;
 
 import java.io.IOException;
 import java.nio.file.Files;

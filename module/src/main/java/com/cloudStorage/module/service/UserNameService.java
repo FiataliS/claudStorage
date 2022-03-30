@@ -1,4 +1,4 @@
-package com.cloudStorage.server.service;
+package com.cloudStorage.module.service;
 
 public class UserNameService {
 

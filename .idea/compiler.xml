@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="claudStorage" />
+        <module name="module" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="claudStorage" target="8" />
+      <module name="module" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

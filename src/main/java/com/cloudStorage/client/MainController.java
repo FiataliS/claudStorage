@@ -1,6 +1,5 @@
 package com.cloudStorage.client;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,7 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
-import com.cloudStorage.server.model.*;
+
+import com.cloudStorage.module.model.*;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;

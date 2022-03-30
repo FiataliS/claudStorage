@@ -1,6 +1,5 @@
 package com.cloudStorage.server.handler;
 
-import com.cloudStorage.server.model.*;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.File;
@@ -11,11 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static com.cloudStorage.server.model.MessageType.*;
+import com.cloudStorage.module.model.*;
+
+import static com.cloudStorage.module.model.MessageType.*;
+
 
 public class HandlerOperation {
-    private static Path serverDir = CloudMessageHandler.getServerDir();
-    ;
+    private static final Path serverDir = CloudMessageHandler.getServerDir();
+
 
     public static final Map<MessageType, BiConsumer<ChannelHandlerContext, CloudMessage>> HANDLER_MAP = new HashMap<>();
 
