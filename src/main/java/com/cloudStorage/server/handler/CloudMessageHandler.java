@@ -7,6 +7,8 @@ import java.util.function.BiConsumer;
 import com.cloudStorage.module.model.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
+import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
 import static com.cloudStorage.server.handler.HandlerOperation.HANDLER_MAP;
 
@@ -20,9 +22,9 @@ public class CloudMessageHandler extends SimpleChannelInboundHandler<CloudMessag
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        serverDir = Paths.get("serverDir");
-        ctx.write(new ListMessage(serverDir));
-        ctx.writeAndFlush(new FileDir(serverDir.toFile().getPath()));
+        //serverDir = Paths.get("serverDir");
+        //ctx.write(new ListMessage(serverDir));
+        //ctx.writeAndFlush(new FileDir(serverDir.toFile().getPath()));
     }
 
     @Override

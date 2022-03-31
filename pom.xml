@@ -34,6 +34,16 @@
             <artifactId>module</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>sqlline</groupId>
+            <artifactId>sqlline</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.sqldelight</groupId>
+            <artifactId>sqlite-driver</artifactId>
+            <version>1.5.3</version>
+        </dependency>
 
 
     </dependencies>
