@@ -1,5 +1,6 @@
 package com.cloudStorage.module.model;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class AuthServ implements CloudMessage {
@@ -8,7 +9,7 @@ public class AuthServ implements CloudMessage {
     String pass;
     boolean auth;
 
-    public AuthServ(String nick, String pass, boolean auth) {
+    public AuthServ(String nick, String pass, boolean auth) throws IOException {
         this.Nick = nick;
         this.pass = pass;
         this.auth = auth;

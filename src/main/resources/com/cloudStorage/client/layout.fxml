@@ -22,7 +22,7 @@
             prefHeight="26.0" prefWidth="257.0" text="скачать выбранный файл" visible="false"/>
     <Button fx:id="upload" layoutX="10.0" layoutY="406.0" mnemonicParsing="false" onAction="#upload" prefHeight="26.0"
             prefWidth="257.0" text="загрузить выбранный файл" visible="false"/>
-    <Button fx:id="updateView" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateView"
+    <Button fx:id="updateButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateButton"
             prefHeight="26.0" prefWidth="120.0" text="Обновить списки" visible="false"/>
     <Button fx:id="authButton" layoutX="223.0" layoutY="220.0" mnemonicParsing="false" onAction="#authButton"
             prefHeight="26.0" prefWidth="120.0" text="Подключится"/>

@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 
 import com.cloudStorage.module.model.*;
@@ -23,7 +24,7 @@ public class MainController implements Initializable {
 
     public ListView<String> clientView, serverView;
     public TextField clientPath, serverPath, login;
-    public Button download, upload, updateView, authButton;
+    public Button download, upload, updateButton, authButton;
     public Line line1, line2;
     public Label label1, label2, label3, label4;
     public RadioButton radioButtonDeleteFile;
@@ -31,6 +32,7 @@ public class MainController implements Initializable {
 
 
     private Path clientDir;
+    private Path serverDir;
 
     private ObjectEncoderOutputStream oos;
     private ObjectDecoderInputStream ois;
@@ -51,7 +53,7 @@ public class MainController implements Initializable {
     }
 
     public void upload(ActionEvent actionEvent) throws IOException {
-        if (!fileExtensionCheck(clientView.getSelectionModel().getSelectedItem()) && chekSelectedView(clientView)) {
+        if (clientDir.resolve(clientView.getSelectionModel().getSelectedItem()).toFile().isDirectory() && chekSelectedView(clientView)) {
             alert("Ошибка", "Папку передать не могу!");
         } else if (chekSelectedView(clientView)) {
             String item = clientView.getSelectionModel().getSelectedItem();
@@ -90,9 +92,20 @@ public class MainController implements Initializable {
         });
     }
 
-    private void updateClientPatth() {
-        clientPath.setText(clientDir.toFile().getPath());
+    private void updateServerViewPath() {
+        try {
+            oos.writeObject(new ListMessage(clientDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    private void updateClientPath() {
+        Platform.runLater(() -> {
+            clientPath.setText(clientDir.toFile().getPath());
+        });
+    }
+
 
     private void read() {
         updateClientView();
@@ -110,27 +123,24 @@ public class MainController implements Initializable {
                         ListMessage lm = (ListMessage) msg;
                         Platform.runLater(() -> {
                             serverView.getItems().clear();
-                            //serverView.getItems().add("...");
+                            serverView.getItems().add("...");
                             serverView.getItems().addAll(lm.getFiles());
+                            //serverPath.setText(lm.getFileDir());
+                            serverPath.setText(nickName);
                         });
-                        break;
-                    case FILE_DIR:
-                        FileDir fd = (FileDir) msg;
-                        serverPath.setText(fd.getDir());
-                        System.out.println(fd.getDir());
                         break;
                     case AUTH_SERV:
                         AuthServ authServ = (AuthServ) msg;
                         isAuthorized = authServ.getAuth();
                         nickName = authServ.getNick();
                         if (isAuthorized) {
-                            oos.writeObject(new ListMessage(clientDir));
+                            updateServerViewPath();
                             showHide();
                         } else {
-
                             alert("Неудача", "Неверный логин и/или пороль");
                         }
                         break;
+
                 }
             }
         } catch (Exception e) {
@@ -141,35 +151,53 @@ public class MainController implements Initializable {
     public void connect() {
         try {
             Socket socket = new Socket("localhost", 8189);
-            oos = new ObjectEncoderOutputStream(socket.getOutputStream());
-            ois = new ObjectDecoderInputStream(socket.getInputStream());
-            clientDir = Paths.get("clientDir");
             Thread readThread = new Thread(this::read);
-            readThread.setDaemon(true);
-            readThread.start();
+            if (isAuthorized == false) {
+                oos = new ObjectEncoderOutputStream(socket.getOutputStream());
+                ois = new ObjectDecoderInputStream(socket.getInputStream());
+                clientDir = Paths.get("clientDir");
+                readThread.setDaemon(true);
+                readThread.start();
+            } else {
+                socket.close();
+            }
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
     }
 
+    public void disconnect (){
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         connect();
-
         clientView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 String item = clientView.getSelectionModel().getSelectedItem();
                 if (item.equals("...")) {
                     clientDir = clientDir.resolve("..").normalize();
                     updateClientView();
-                    updateClientPatth();
+                    updateClientPath();
                 } else {
                     File selected = clientDir.resolve(item).toFile();
                     if (selected.isDirectory()) {
                         clientDir = clientDir.resolve(item).normalize();
                         updateClientView();
-                        updateClientPatth();
+                        updateClientPath();
                     }
+                }
+            }
+        });
+        serverView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                String item = serverView.getSelectionModel().getSelectedItem();
+                try {
+                    oos.writeObject(new FileDir(serverDir, item));
+                    System.out.println("Запрос отправлен");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -195,15 +223,11 @@ public class MainController implements Initializable {
         });
     }
 
-    public void updateView(ActionEvent actionEvent) {
+    public void updateButton(ActionEvent actionEvent) {
         updateClientView();
-        try {
-            oos.writeObject(new ListMessage(clientDir));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        viewColor(clientView);
-//        viewColor(serverView);
+        updateClientPath();
+        updateServerViewPath();
+
     }
 
 
@@ -223,7 +247,7 @@ public class MainController implements Initializable {
                 serverPath.setVisible(true);
                 download.setVisible(true);
                 upload.setVisible(true);
-                updateView.setVisible(true);
+                updateButton.setVisible(true);
                 line1.setVisible(true);
                 line2.setVisible(true);
                 label1.setVisible(true);
@@ -236,7 +260,6 @@ public class MainController implements Initializable {
                 authButton.setLayoutX(130);
                 authButton.setLayoutY(10);
                 authButton.setText("Отключится");
-
             } else {
                 clientView.setVisible(false);
                 serverView.setVisible(false);
@@ -244,7 +267,7 @@ public class MainController implements Initializable {
                 serverPath.setVisible(false);
                 download.setVisible(false);
                 upload.setVisible(false);
-                updateView.setVisible(false);
+                updateButton.setVisible(false);
                 line1.setVisible(false);
                 line2.setVisible(false);
                 label1.setVisible(false);
@@ -276,17 +299,8 @@ public class MainController implements Initializable {
             }
         } else {
             isAuthorized = false;
+            connect();
             showHide();
         }
-    }
-
-    public static boolean fileExtensionCheck(String name) { // true если расширение есть
-        StringBuilder sb = new StringBuilder(name);
-        for (int i = 0; i < sb.length(); i++) {
-            if (sb.charAt(i) == '.' && sb.charAt(sb.length() - 1) != '.') {
-                return true;
-            }
-        }
-        return false;
     }
 }
