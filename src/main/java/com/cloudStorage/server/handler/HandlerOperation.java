@@ -18,8 +18,6 @@ import static com.cloudStorage.module.model.MessageType.*;
 @Slf4j
 public class HandlerOperation {
 
-    private static Path serverDir;
-
     public static final Map<MessageType, BiConsumer<ChannelHandlerContext, CloudMessage>> HANDLER_MAP = new HashMap<>();
 
     static {

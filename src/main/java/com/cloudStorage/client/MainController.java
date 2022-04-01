@@ -280,15 +280,6 @@ public class MainController implements Initializable {
         updateClientView();
         updateClientPath();
         updateServerViewPath();
-
-    }
-
-
-    public void viewColor(ListView<String> view) {
-        Platform.runLater(() -> {
-            view.styleProperty().set("-fx-background-color: red;");
-        });
-
     }
 
     private void showHide() {

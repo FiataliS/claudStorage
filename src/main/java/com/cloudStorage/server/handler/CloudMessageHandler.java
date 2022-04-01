@@ -25,8 +25,6 @@ public class CloudMessageHandler extends SimpleChannelInboundHandler<CloudMessag
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         serverDir = Paths.get("serverDir");
-        //ctx.write(new ListMessage(serverDir));
-        //ctx.writeAndFlush(new FileDir(serverDir.toFile().getPath()));
     }
 
     @Override
