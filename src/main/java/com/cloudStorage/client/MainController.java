@@ -7,11 +7,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 
 import com.cloudStorage.module.model.*;
+import com.sun.imageio.plugins.gif.GIFImageMetadata;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
@@ -106,7 +108,6 @@ public class MainController implements Initializable {
         });
     }
 
-
     private void read() {
         updateClientView();
         clientPath.setText(clientDir.toFile().getPath());
@@ -128,6 +129,7 @@ public class MainController implements Initializable {
                             }
                             serverView.getItems().addAll(lm.getFiles());
                             serverPath.setText(dirServerCorrect(lm.getFileDir()));
+                            serverView.getItems().add("New Folder");
                         });
                         break;
                     case AUTH_SERV:
@@ -217,10 +219,18 @@ public class MainController implements Initializable {
         serverView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 String item = serverView.getSelectionModel().getSelectedItem();
-                try {
-                    oos.writeObject(new FileDir(serverDir, item));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                if (item.equals("New Folder")) {
+                    try {
+                        oos.writeObject(new NewFolder(showInputTextDialog()));
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    try {
+                        oos.writeObject(new FileDir(serverDir, item));
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -326,4 +336,17 @@ public class MainController implements Initializable {
             showHide();
         }
     }
+
+    private String showInputTextDialog() {
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Новая папка");
+        dialog.setHeight(300);
+        dialog.setHeaderText("Создание новой папки");
+        dialog.setContentText("Введите имя:");
+        StringBuilder result = new StringBuilder(dialog.showAndWait().toString());
+          result.delete(0,9 );
+          result.deleteCharAt(result.length()-1);
+        return result.toString();
+    }
+
 }

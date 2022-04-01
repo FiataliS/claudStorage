@@ -76,17 +76,29 @@ public class HandlerOperation {
 
         HANDLER_MAP.put(AUTH_SERV, (ctx, cloudMessage) -> {
             try {
-            AuthServ authServ = (AuthServ) cloudMessage;
-            AuthService.connect();
-            String id = AuthService.getID(authServ.getNick(), authServ.getPass());
-            if (id != null) {
-                CloudMessageHandler.setServerDir(CloudMessageHandler.getServerDir().resolve(id).toFile().toPath());
-                ctx.writeAndFlush(new AuthServ(authServ.getNick(), "_", true));
-            } else {
-                System.out.println("Пороль не правильный");
-                ctx.writeAndFlush(new AuthServ(authServ.getNick(), "_", false));
+                AuthServ authServ = (AuthServ) cloudMessage;
+                AuthService.connect();
+                String id = AuthService.getID(authServ.getNick(), authServ.getPass());
+                if (id != null) {
+                    CloudMessageHandler.setServerDir(CloudMessageHandler.getServerDir().resolve(id).toFile().toPath());
+                    ctx.writeAndFlush(new AuthServ(authServ.getNick(), "_", true));
+                } else {
+                    System.out.println("Пороль не правильный");
+                    ctx.writeAndFlush(new AuthServ(authServ.getNick(), "_", false));
+                }
+                AuthService.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            AuthService.disconnect();
+        });
+
+        HANDLER_MAP.put(NEW_FOLDER, (ctx, cloudMessage) -> {
+            NewFolder newFolder = (NewFolder) cloudMessage;
+            Path path = CloudMessageHandler.getServerDir().resolve(newFolder.getItem());
+            try {
+
+                Files.createDirectory(path);
+                ctx.writeAndFlush(new ListMessage(CloudMessageHandler.getServerDir()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

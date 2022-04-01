@@ -17,10 +17,6 @@ public class FileDir implements CloudMessage {
         this.item = item;
     }
 
-    public Path getFileDir() {
-        return fileDir;
-    }
-
     public String getItem() {
         return item;
     }

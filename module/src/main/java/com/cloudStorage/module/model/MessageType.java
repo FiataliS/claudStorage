@@ -5,5 +5,6 @@ public enum MessageType {
     LIST,
     AUTH_SERV,
     FILE_REQUEST,
-    FILE_DIR
+    FILE_DIR,
+    NEW_FOLDER
 }
