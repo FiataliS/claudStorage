@@ -9,11 +9,9 @@ import java.util.stream.Collectors;
 
 public class FileDir implements CloudMessage {
 
-    private final Path fileDir;
     private final String item;
 
-    public FileDir(Path path, String item) throws IOException {
-        this.fileDir = path;
+    public FileDir(String item) throws IOException {
         this.item = item;
     }
 

@@ -7,19 +7,19 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 
 import com.cloudStorage.module.model.*;
-import com.sun.imageio.plugins.gif.GIFImageMetadata;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Line;
 
 public class MainController implements Initializable {
@@ -34,7 +34,6 @@ public class MainController implements Initializable {
 
 
     private Path clientDir;
-    private Path serverDir;
 
     private ObjectEncoderOutputStream oos;
     private ObjectDecoderInputStream ois;
@@ -199,6 +198,9 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         connect();
+        Platform.runLater(() -> {
+            login.requestFocus();
+        });
         clientView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 String item = clientView.getSelectionModel().getSelectedItem();
@@ -227,10 +229,28 @@ public class MainController implements Initializable {
                     }
                 } else {
                     try {
-                        oos.writeObject(new FileDir(serverDir, item));
+                        oos.writeObject(new FileDir(item));
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
+                }
+            }
+        });
+        pass.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() {
+            @Override
+            public void handle(javafx.scene.input.KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    authButton();
+                }
+            }
+        });
+        login.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    Platform.runLater(() -> {
+                        pass.requestFocus();
+                    });
                 }
             }
         });
@@ -315,11 +335,12 @@ public class MainController implements Initializable {
                 authButton.setText("Подключится");
                 login.clear();
                 pass.clear();
+                login.requestFocus();
             }
         });
     }
 
-    public void authButton(ActionEvent actionEvent) {
+    public void authButton() {
         if (!isAuthorized) {
             if (pass.getLength() > 0 && login.getLength() > 0) {
                 try {
@@ -340,12 +361,12 @@ public class MainController implements Initializable {
     private String showInputTextDialog() {
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("Новая папка");
-        dialog.setHeight(300);
+        dialog.setHeight(400);
         dialog.setHeaderText("Создание новой папки");
         dialog.setContentText("Введите имя:");
         StringBuilder result = new StringBuilder(dialog.showAndWait().toString());
-          result.delete(0,9 );
-          result.deleteCharAt(result.length()-1);
+        result.delete(0, 9);
+        result.deleteCharAt(result.length() - 1);
         return result.toString();
     }
 
