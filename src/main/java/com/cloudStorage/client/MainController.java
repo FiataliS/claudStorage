@@ -123,10 +123,11 @@ public class MainController implements Initializable {
                         ListMessage lm = (ListMessage) msg;
                         Platform.runLater(() -> {
                             serverView.getItems().clear();
-                            serverView.getItems().add("...");
+                            if (dot(dirServerCorrect(lm.getFileDir()))) {
+                                serverView.getItems().add("...");
+                            }
                             serverView.getItems().addAll(lm.getFiles());
-                            //serverPath.setText(lm.getFileDir());
-                            serverPath.setText(nickName);
+                            serverPath.setText(dirServerCorrect(lm.getFileDir()));
                         });
                         break;
                     case AUTH_SERV:
@@ -140,12 +141,39 @@ public class MainController implements Initializable {
                             alert("Неудача", "Неверный логин и/или пороль");
                         }
                         break;
-
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean dot(String str) {
+        StringBuilder sb = new StringBuilder(str);
+        if (sb.length() > 20) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public String dirServerCorrect(String str) {
+        int count = 2;
+        StringBuilder root = new StringBuilder("Корневая директория");
+        StringBuilder sb = new StringBuilder(str);
+        sb.append('/');
+        for (int i = 0; i < sb.length(); i++) {
+            if (sb.charAt(i) == '/') {
+                count--;
+                if (count == 0) {
+                    count = i;
+                    break;
+                }
+            }
+        }
+        sb.delete(0, count);
+        root.append(sb);
+        return root.toString();
     }
 
     public void connect() {
@@ -164,10 +192,6 @@ public class MainController implements Initializable {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-    }
-
-    public void disconnect (){
-
     }
 
     @Override
@@ -195,7 +219,6 @@ public class MainController implements Initializable {
                 String item = serverView.getSelectionModel().getSelectedItem();
                 try {
                     oos.writeObject(new FileDir(serverDir, item));
-                    System.out.println("Запрос отправлен");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

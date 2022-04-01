@@ -57,7 +57,7 @@ public class HandlerOperation {
         HANDLER_MAP.put(FILE_DIR, (ctx, cloudMessage) -> {
             try {
                 FileDir fd = (FileDir) cloudMessage;
-                Path fileDir = fd.getFileDir();
+                Path fileDir = CloudMessageHandler.getServerDir();
                 String item = fd.getItem();
                 if (item.equals("...")) {
                     fileDir = fileDir.resolve("..").normalize();

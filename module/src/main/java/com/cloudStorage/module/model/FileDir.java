@@ -27,6 +27,6 @@ public class FileDir implements CloudMessage {
 
     @Override
     public MessageType getMessageType() {
-        return MessageType.LIST;
+        return MessageType.FILE_DIR;
     }
 }
