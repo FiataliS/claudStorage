@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.cloudStorage.client.NettyClient">
-    <ListView fx:id="clientView" layoutX="14.0" layoutY="52.0" prefHeight="296.0" prefWidth="257.0"/>
-    <ListView fx:id="serverView" layoutX="329.0" layoutY="52.0" prefHeight="296.0" prefWidth="257.0"/>
-    <TextField fx:id="clientPath" editable="false" layoutX="14.0" layoutY="26.0" prefHeight="27.0" prefWidth="257.0"/>
-    <TextField fx:id="serverPath" editable="false" layoutX="329.0" layoutY="26.0" prefHeight="26.0" prefWidth="257.0"/>
-    <Button layoutX="283.0" layoutY="110.0" mnemonicParsing="false" onAction="#download" prefHeight="26.0"
-            prefWidth="35.0" text="&lt;"/>
-    <Button layoutX="283.0" layoutY="145.0" mnemonicParsing="false" onAction="#upload" prefHeight="26.0"
-            prefWidth="35.0" text="&gt;"/>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0"
+            prefWidth="570.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cloudStorage.client.MainController">
+    <ListView fx:id="clientView" layoutX="10.0" layoutY="110.0" prefHeight="296.0" prefWidth="257.0" visible="false"/>
+    <ListView fx:id="serverView" layoutX="302.0" layoutY="110.0" prefHeight="296.0" prefWidth="257.0" visible="false"/>
+    <TextField fx:id="clientPath" editable="false" layoutX="10.0" layoutY="84.0" prefHeight="27.0" prefWidth="257.0"
+               visible="false"/>
+    <TextField fx:id="serverPath" editable="false" layoutX="302.0" layoutY="85.0" prefHeight="26.0" prefWidth="257.0"
+               visible="false"/>
+    <Button fx:id="download" layoutX="302.0" layoutY="406.0" mnemonicParsing="false" onAction="#download"
+            prefHeight="26.0" prefWidth="257.0" text="скачать выбранный файл" visible="false"/>
+    <Button fx:id="upload" layoutX="10.0" layoutY="406.0" mnemonicParsing="false" onAction="#upload" prefHeight="26.0"
+            prefWidth="257.0" text="загрузить выбранный файл" visible="false"/>
+    <Button fx:id="updateButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateButton"
+            prefHeight="26.0" prefWidth="120.0" text="Обновить списки" visible="false"/>
+    <Button fx:id="authButton" layoutX="223.0" layoutY="220.0" mnemonicParsing="false" onAction="#authButton"
+            prefHeight="26.0" prefWidth="120.0" text="Подключится"/>
+    <Line fx:id="line1" endX="-100.5" endY="384.5" layoutX="384.0" layoutY="61.0" startX="-100.0" startY="-2.0"
+          visible="false"/>
+    <Line fx:id="line2" endX="286.0" layoutX="285.0" layoutY="59.0" startX="-285.0" visible="false"/>
+    <Label fx:id="label1" alignment="CENTER" layoutX="11.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0"
+           text="Ваш компьютер" visible="false"/>
+    <Label fx:id="label2" alignment="CENTER" layoutX="302.0" layoutY="60.0" prefHeight="26.0" prefWidth="257.0"
+           text="Удаленный сервер" visible="false"/>
+    <RadioButton fx:id="radioButtonDeleteFile" layoutX="330.0" layoutY="15.0" mnemonicParsing="false"
+                 onAction="#radioButtonDeleteFile" prefHeight="18.0" prefWidth="267.0" text="перемещать с удалением"
+                 visible="false"/>
+    <PasswordField fx:id="pass" layoutX="203.0" layoutY="184.0"/>
+    <TextField fx:id="login" layoutX="203.0" layoutY="152.0"/>
+    <Label fx:id="label3" layoutX="140.0" layoutY="156.0" prefHeight="18.0" prefWidth="55.0" text="Логин"/>
+    <Label fx:id="label4" layoutX="140.0" layoutY="188.0" prefHeight="18.0" prefWidth="55.0" text="Пароль"/>
+
 </AnchorPane>

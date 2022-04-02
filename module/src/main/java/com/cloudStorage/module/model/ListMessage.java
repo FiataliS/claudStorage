@@ -1,4 +1,4 @@
-package com.cloudStorage.server.model;
+package com.cloudStorage.module.model;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,11 +12,13 @@ import lombok.Data;
 public class ListMessage implements CloudMessage {
 
     private final List<String> files;
+    private final String fileDir;
 
     public ListMessage(Path path) throws IOException {
         files = Files.list(path)
                 .map(p -> p.getFileName().toString())
                 .collect(Collectors.toList());
+        fileDir = path.normalize().toString();
     }
 
     @Override

@@ -1,0 +1,26 @@
+package com.cloudStorage.module.model;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class FileDir implements CloudMessage {
+
+    private final String item;
+
+    public FileDir(String item) throws IOException {
+        this.item = item;
+    }
+
+    public String getItem() {
+        return item;
+    }
+
+    @Override
+    public MessageType getMessageType() {
+        return MessageType.FILE_DIR;
+    }
+}

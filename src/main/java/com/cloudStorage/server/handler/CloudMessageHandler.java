@@ -1,38 +1,37 @@
 package com.cloudStorage.server.handler;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.BiConsumer;
 
-import com.cloudStorage.server.model.CloudMessage;
-import com.cloudStorage.server.model.FileRequest;
-import com.cloudStorage.server.model.ListMessage;
-import com.cloudStorage.server.model.FileMessage;
+import com.cloudStorage.module.model.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import static com.cloudStorage.server.handler.HandlerOperation.HANDLER_MAP;
+
 public class CloudMessageHandler extends SimpleChannelInboundHandler<CloudMessage> {
 
-    private Path serverDir;
+    private static Path serverDir;
+
+    public static Path getServerDir() {
+        return serverDir;
+    }
+
+    public static void setServerDir(Path serverDir) {
+        CloudMessageHandler.serverDir = serverDir;
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        serverDir = Paths.get("server");
-        ctx.writeAndFlush(new ListMessage(serverDir));
+        serverDir = Paths.get("serverDir");
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CloudMessage cloudMessage) throws Exception {
-        switch (cloudMessage.getMessageType()) {
-            case FILE:
-                FileMessage fm = (FileMessage) cloudMessage;
-                Files.write(serverDir.resolve(fm.getName()), fm.getBytes());
-                ctx.writeAndFlush(new ListMessage(serverDir));
-                break;
-            case FILE_REQUEST:
-                FileRequest fr = (FileRequest) cloudMessage;
-                ctx.writeAndFlush(new FileMessage(serverDir.resolve(fr.getName())));
-                break;
-        }
+        BiConsumer<ChannelHandlerContext, CloudMessage> channelHandlerContextCloudMessageBiConsumer =
+                HANDLER_MAP.get(cloudMessage.getMessageType());
+        channelHandlerContextCloudMessageBiConsumer.accept(ctx, cloudMessage);
     }
+
 }
